@@ -12,13 +12,15 @@
       color: #333;
       font-family: 'Dancing Script', cursive;
       text-align: center;
+      margin: 0;
+      padding: 0;
       height: 100vh;
       overflow: hidden;
     }
 
     h1 {
-      margin-top: 30px;
-      font-size: 2.5em;
+      margin-top: 20px;
+      font-size: 3em;
       color: #d6336c;
     }
 
@@ -26,14 +28,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 25px;
-      margin-top: 60px;
+      gap: 40px;
+      margin-top: 40px;
     }
 
     button {
-      width: 100px;
-      height: 100px;
-      font-size: 18px;
+      width: 140px;
+      height: 140px;
+      font-size: 22px;
       font-weight: bold;
       border: none;
       border-radius: 50%;
@@ -49,12 +51,12 @@
 
     .love {
       background: #ff6b81;
-      box-shadow: 0 0 15px #ff6b81;
+      box-shadow: 0 0 20px #ff6b81;
     }
 
     .true-love {
       background: #ffd700;
-      box-shadow: 0 0 20px #ffd700;
+      box-shadow: 0 0 25px #ffd700;
       color: #333;
     }
 
@@ -62,7 +64,7 @@
       position: fixed;
       top: 50%;
       left: 50%;
-      font-size: 80px;
+      font-size: 100px;
       transform: translate(-50%, -50%) scale(0);
       opacity: 0;
       transition: transform 0.6s ease, opacity 0.6s ease;
@@ -75,21 +77,31 @@
       opacity: 1;
     }
 
-    .petal, .ribbon, .sparkle {
+    .effect-text {
       position: fixed;
-      font-size: 24px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 60px;
+      font-weight: bold;
+      color: #ff6b81;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      opacity: 0;
+      z-index: 11;
+      pointer-events: none;
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .effect-text.show {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+
+    .petal {
+      position: fixed;
+      font-size: 28px;
       animation: float 2s linear forwards;
       opacity: 0.8;
-    }
-
-    .ribbon {
-      font-size: 28px;
-      color: #ff69b4;
-    }
-
-    .sparkle {
-      font-size: 20px;
-      color: gold;
     }
 
     @keyframes float {
@@ -105,60 +117,67 @@
   </style>
 </head>
 <body>
-  <h1>LOVE BUTTON 💒</h1>
+  <h1>🍒LOVEBUTTON🍒</h1>
   <div class="button-container">
     <button class="love" onclick="activateLove()">LOVE</button>
     <button class="true-love" onclick="activateTrueLove()">TRUE LOVE</button>
   </div>
 
   <div id="effect" class="effect-icon">💖</div>
+  <div id="effectText" class="effect-text">LOVE</div>
 
   <audio id="love-sound" src="LOVE_male.mp3"></audio>
   <audio id="true-love-sound" src="TRUE_LOVE_male.mp3"></audio>
-  <audio id="bell-sound" src="wedding_bell.mp3"></audio> <!-- 鐘の音を追加 -->
+  <audio id="bell-sound" src="wedding_bell.mp3"></audio>
 
   <script>
-    function createFloaty(char, className) {
-      const item = document.createElement('div');
-      item.classList.add(className);
-      item.textContent = char;
-      item.style.top = (window.innerHeight / 2 + Math.random() * 50 - 25) + 'px';
-      item.style.left = (window.innerWidth / 2 + Math.random() * 100 - 50) + 'px';
-      document.body.appendChild(item);
-      setTimeout(() => item.remove(), 2000);
+    function createPetal(char, color) {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      petal.textContent = char;
+      petal.style.color = color;
+      petal.style.top = (window.innerHeight / 2 + Math.random() * 50 - 25) + 'px';
+      petal.style.left = (window.innerWidth / 2 + Math.random() * 100 - 50) + 'px';
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 2000);
+    }
+
+    function showEffect(icon, text, color) {
+      const effect = document.getElementById('effect');
+      const effectText = document.getElementById('effectText');
+      effect.textContent = icon;
+      effect.style.color = color;
+      effect.classList.add('show');
+      effectText.textContent = text;
+      effectText.style.color = color;
+      effectText.classList.add('show');
+      setTimeout(() => {
+        effect.classList.remove('show');
+        effectText.classList.remove('show');
+      }, 1200);
     }
 
     function activateLove() {
-      const effect = document.getElementById('effect');
       const sound = document.getElementById('love-sound');
-      effect.textContent = '💖';
-      effect.style.color = '#ff6b81';
-      effect.classList.add('show');
       sound.currentTime = 0;
       sound.play();
+      showEffect('💖', 'LOVE', '#ff6b81');
       for (let i = 0; i < 20; i++) {
-        setTimeout(() => createFloaty('💗', 'petal'), i * 50);
-        setTimeout(() => createFloaty('🎀', 'ribbon'), i * 70);
+        setTimeout(() => createPetal('💗', '#ff6b81'), i * 50);
       }
-      setTimeout(() => effect.classList.remove('show'), 1000);
     }
 
     function activateTrueLove() {
-      const effect = document.getElementById('effect');
       const sound = document.getElementById('true-love-sound');
       const bell = document.getElementById('bell-sound');
-      effect.textContent = '💛✨';
-      effect.style.color = '#ffd700';
-      effect.classList.add('show');
       sound.currentTime = 0;
       sound.play();
-      setTimeout(() => bell.play(), 1000); // 鐘の音を少し遅れて鳴らす
+      setTimeout(() => bell.play(), 1000);
+      showEffect('💛', 'TRUE LOVE', '#ffd700');
       for (let i = 0; i < 25; i++) {
-        setTimeout(() => createFloaty('✨', 'sparkle'), i * 40);
-        setTimeout(() => createFloaty('💐', 'petal'), i * 60);
-        setTimeout(() => createFloaty('🎀', 'ribbon'), i * 80);
+        setTimeout(() => createPetal('✨', 'gold'), i * 40);
+        setTimeout(() => createPetal('💐', '#ff69b4'), i * 60);
       }
-      setTimeout(() => effect.classList.remove('show'), 1200);
     }
   </script>
 </body>
