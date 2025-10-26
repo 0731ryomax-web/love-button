@@ -2,9 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aiwotutaero 🍒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>🍒LOVEBUTTON🍒</title>
   <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+
   <style>
     body {
       background: linear-gradient(180deg, #fff0f6, #ffe6f0);
@@ -13,6 +14,7 @@
       overflow: hidden;
       height: 100vh;
       margin: 0;
+      touch-action: manipulation; /* iPhoneでのズーム防止 */
     }
 
     h1 {
@@ -34,68 +36,79 @@
       height: 120px;
       border-radius: 50%;
       border: none;
-      background: #ff7eb3;
-      color: white;
-      font-size: 20px;
+      font-size: 22px;
       font-family: 'Allura', cursive;
-      letter-spacing: 1px;
-      box-shadow: 0 5px 15px rgba(255, 100, 150, 0.3);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.15s ease;
+      box-shadow: 0 5px 15px rgba(255, 100, 150, 0.3);
+      color: #fff;
     }
 
-    button:hover {
-      transform: scale(1.1);
-      background: #ff4d94;
+    .love {
+      background: #ff6b81;
     }
 
+    .true-love {
+      background: linear-gradient(145deg, #ffd700, #ffea70);
+      color: #333;
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+    }
+
+    button:active {
+      transform: scale(1.05);
+    }
+
+    /* ハート演出 */
     .floating-container {
       position: absolute;
       pointer-events: none;
       animation: floatUp 1.4s ease-out forwards;
+      z-index: 10;
     }
 
     .floating-heart {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
       background-color: #ff7eb3;
       transform: rotate(-45deg);
-      top: -40px;
-      left: -40px;
-      opacity: 0.7;
+      top: -60px;
+      left: -60px;
+      opacity: 0.8;
+      z-index: 10;
     }
 
     .floating-heart::before,
     .floating-heart::after {
       content: "";
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
       background-color: #ff7eb3;
       border-radius: 50%;
     }
 
     .floating-heart::before {
-      top: -40px;
+      top: -60px;
       left: 0;
     }
 
     .floating-heart::after {
-      left: 40px;
+      left: 60px;
       top: 0;
     }
 
     .floating-text {
       position: absolute;
-      font-size: 30px;
+      font-size: 40px;
       color: #fff;
       text-shadow: 0 0 8px rgba(255, 50, 100, 0.8);
-      width: 100%;
-      text-align: center;
-      top: 16px;
-      left: 0;
-      transform: rotate(10deg);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: popText 1.4s ease-out forwards;
+      z-index: 11;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
@@ -108,51 +121,76 @@
         transform: translateY(-100px) scale(1.2);
       }
     }
+
+    @keyframes popText {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+      }
+      20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4);
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Aiwotutaero 🍒</h1>
+  <h1>🍒LOVEBUTTON🍒</h1>
 
   <div class="button-container">
-    <button onclick="playSoundAndAnimate('LOVE!')">Love</button>
-    <button onclick="playSoundAndAnimate('True Love!')">True Love</button>
+    <button class="love" onclick="activateLove()">LOVE</button>
+    <button class="true-love" onclick="activateTrueLove()">TRUE LOVE</button>
   </div>
 
-  <audio id="loveSound" src="love.mp3" preload="auto"></audio>
-  <audio id="trueLoveSound" src="truelove.mp3" preload="auto"></audio>
+  <!-- 音声 -->
+  <audio id="love-sound" src="LOVE_male.mp3"></audio>
+  <audio id="true-love-sound" src="TRUE_LOVE_male.mp3"></audio>
+  <audio id="bell-sound" src="wedding_bell.mp3"></audio>
 
   <script>
-    function playSoundAndAnimate(text) {
-      const sound = text.includes("True") ? document.getElementById("trueLoveSound") : document.getElementById("loveSound");
-      sound.currentTime = 0;
-      sound.play();
+    function showEffect(text, color = '#ff7eb3') {
+      const container = document.createElement('div');
+      container.className = 'floating-container';
 
-      // コンテナ生成
-      const container = document.createElement("div");
-      container.className = "floating-container";
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.style.backgroundColor = color;
+      heart.style.setProperty('--heart-color', color);
 
-      // ハート生成
-      const heart = document.createElement("div");
-      heart.className = "floating-heart";
+      const textDiv = document.createElement('div');
+      textDiv.className = 'floating-text';
+      textDiv.textContent = text;
 
-      // テキスト生成
-      const floating = document.createElement("div");
-      floating.className = "floating-text";
-      floating.textContent = text + " 🍒";
+      const x = window.innerWidth / 2 - 60;
+      const y = window.innerHeight / 2 - 60;
+      container.style.left = `${x}px`;
+      container.style.top = `${y}px`;
 
-      // 位置調整（iPhoneでも収まる範囲）
-      const x = window.innerWidth / 2 + (Math.random() * 100 - 50);
-      const y = window.innerHeight / 2 - 80;
-      container.style.left = x + "px";
-      container.style.top = y + "px";
-
-      // 要素を組み立て
       container.appendChild(heart);
-      container.appendChild(floating);
+      container.appendChild(textDiv);
       document.body.appendChild(container);
 
-      // アニメーション終了後削除
       setTimeout(() => container.remove(), 1400);
+    }
+
+    function activateLove() {
+      const sound = document.getElementById('love-sound');
+      sound.currentTime = 0;
+      sound.play();
+      showEffect('LOVE');
+    }
+
+    function activateTrueLove() {
+      const sound = document.getElementById('true-love-sound');
+      const bell = document.getElementById('bell-sound');
+      sound.currentTime = 0;
+      sound.play();
+      setTimeout(() => bell.play(), 800);
+      showEffect('TRUE LOVE', '#ffd700');
     }
   </script>
 </body>
