@@ -3,135 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LOVE BUTTON</title>
+  <title>Aiwotutaero 🍒</title>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
   <style>
-    /* --- 筆記体フォント --- */
-    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-
     body {
-      background-color: #ffffff;
+      background: linear-gradient(180deg, #fff0f6, #ffe6f0);
+      font-family: 'Allura', cursive;
       text-align: center;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Great Vibes', cursive;
+      height: 100vh;
+      margin: 0;
     }
 
     h1 {
-      font-size: 3em;
-      color: #d6336c;
-      margin-bottom: 60px;
+      font-size: 48px;
+      color: #ff2f92;
+      margin-top: 40px;
     }
 
     .button-container {
       display: flex;
       flex-direction: column;
-      gap: 100px;
+      align-items: center;
+      gap: 30px;
+      margin-top: 60px;
     }
 
     button {
-      width: 140px;
-      height: 140px;
-      font-size: 22px;
-      border: none;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
-      color: #fff;
+      border: none;
+      background: #ff7eb3;
+      color: white;
+      font-size: 20px;
+      font-family: 'Allura', cursive;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 15px rgba(255, 100, 150, 0.3);
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
-      font-family: 'Great Vibes', cursive;
+      transition: all 0.2s ease;
     }
 
     button:hover {
       transform: scale(1.1);
+      background: #ff4d94;
     }
 
-    .love {
-      background: #ff6b81;
-      box-shadow: 0 0 20px #ff6b81;
-    }
-
-    .true-love {
-      background: #ffd700;
-      box-shadow: 0 0 25px #ffd700;
-      color: #333;
-    }
-
-    /* --- 発光LOVE演出 --- */
-    .effect-text {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      font-size: 100px;
-      color: #ff6b81;
-      opacity: 0;
-      text-shadow: 0 0 20px #ffadc1, 0 0 40px #fff;
-      transition: transform 0.5s ease-out, opacity 0.8s ease-out;
-      z-index: 10;
+    .floating-container {
+      position: absolute;
       pointer-events: none;
+      animation: floatUp 1.4s ease-out forwards;
     }
 
-    .effect-text.show {
-      transform: translate(-50%, -50%) scale(1.3);
-      opacity: 1;
-      animation: glowFade 1.5s ease-out forwards;
+    .floating-heart {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-color: #ff7eb3;
+      transform: rotate(-45deg);
+      top: -40px;
+      left: -40px;
+      opacity: 0.7;
     }
 
-    @keyframes glowFade {
-      0% { opacity: 1; text-shadow: 0 0 30px #fff, 0 0 60px #ff6b81; }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); text-shadow: 0 0 0 transparent; }
+    .floating-heart::before,
+    .floating-heart::after {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-color: #ff7eb3;
+      border-radius: 50%;
     }
 
-    /* TRUE LOVE は金色発光 */
-    .effect-text.true {
-      color: #ffd700;
-      text-shadow: 0 0 30px #fff3b0, 0 0 60px #ffd700;
+    .floating-heart::before {
+      top: -40px;
+      left: 0;
+    }
+
+    .floating-heart::after {
+      left: 40px;
+      top: 0;
+    }
+
+    .floating-text {
+      position: absolute;
+      font-size: 30px;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255, 50, 100, 0.8);
+      width: 100%;
+      text-align: center;
+      top: 16px;
+      left: 0;
+      transform: rotate(10deg);
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.2);
+      }
     }
   </style>
 </head>
 <body>
-  <h1>💍 LOVE BUTTON 💍</h1>
+  <h1>Aiwotutaero 🍒</h1>
 
   <div class="button-container">
-    <button class="love" onclick="activateLove()">LOVE</button>
-    <button class="true-love" onclick="activateTrueLove()">TRUE LOVE</button>
+    <button onclick="playSoundAndAnimate('LOVE!')">Love</button>
+    <button onclick="playSoundAndAnimate('True Love!')">True Love</button>
   </div>
 
-  <div id="effectText" class="effect-text">LOVE</div>
-
-  <audio id="love-sound" src="LOVE_male.mp3"></audio>
-  <audio id="true-love-sound" src="TRUE_LOVE_male.mp3"></audio>
-  <audio id="bell-sound" src="wedding_bell.mp3"></audio>
+  <audio id="loveSound" src="love.mp3" preload="auto"></audio>
+  <audio id="trueLoveSound" src="truelove.mp3" preload="auto"></audio>
 
   <script>
-    function showEffect(text, isTrueLove = false) {
-      const effectText = document.getElementById('effectText');
-      effectText.textContent = text;
-      effectText.classList.remove('true', 'show'); // 一度リセット
-      if (isTrueLove) effectText.classList.add('true');
-      void effectText.offsetWidth; // アニメーション再トリガー
-      effectText.classList.add('show');
-    }
-
-    function activateLove() {
-      const sound = document.getElementById('love-sound');
+    function playSoundAndAnimate(text) {
+      const sound = text.includes("True") ? document.getElementById("trueLoveSound") : document.getElementById("loveSound");
       sound.currentTime = 0;
       sound.play();
-      showEffect('LOVE');
-    }
 
-    function activateTrueLove() {
-      const sound = document.getElementById('true-love-sound');
-      const bell = document.getElementById('bell-sound');
-      sound.currentTime = 0;
-      sound.play();
-      setTimeout(() => bell.play(), 1000);
-      showEffect('TRUE LOVE', true);
+      // コンテナ生成
+      const container = document.createElement("div");
+      container.className = "floating-container";
+
+      // ハート生成
+      const heart = document.createElement("div");
+      heart.className = "floating-heart";
+
+      // テキスト生成
+      const floating = document.createElement("div");
+      floating.className = "floating-text";
+      floating.textContent = text + " 🍒";
+
+      // 位置調整（iPhoneでも収まる範囲）
+      const x = window.innerWidth / 2 + (Math.random() * 100 - 50);
+      const y = window.innerHeight / 2 - 80;
+      container.style.left = x + "px";
+      container.style.top = y + "px";
+
+      // 要素を組み立て
+      container.appendChild(heart);
+      container.appendChild(floating);
+      document.body.appendChild(container);
+
+      // アニメーション終了後削除
+      setTimeout(() => container.remove(), 1400);
     }
   </script>
 </body>
