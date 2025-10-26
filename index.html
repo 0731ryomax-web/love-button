@@ -5,44 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOVE BUTTON</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+    /* --- 筆記体フォント --- */
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
     body {
       background-color: #ffffff;
-      color: #333;
-      font-family: 'Satisfy', cursive;
       text-align: center;
       margin: 0;
       padding: 0;
       height: 100vh;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Great Vibes', cursive;
     }
 
     h1 {
-      margin-top: 20px;
       font-size: 3em;
       color: #d6336c;
+      margin-bottom: 60px;
     }
 
     .button-container {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 120px; /* ボタン間隔を3倍に拡大 */
-      margin-top: 40px;
+      gap: 100px;
     }
 
     button {
       width: 140px;
       height: 140px;
       font-size: 22px;
-      font-weight: bold;
       border: none;
       border-radius: 50%;
-      color: white;
+      color: #fff;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.3s;
-      font-family: 'Satisfy', cursive;
+      font-family: 'Great Vibes', cursive;
     }
 
     button:hover {
@@ -60,53 +61,47 @@
       color: #333;
     }
 
-    .effect-icon {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      font-size: 160px; /* 大きく！ */
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
-      transition: transform 0.6s ease, opacity 0.6s ease;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    .effect-icon.show {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-    }
-
+    /* --- 発光LOVE演出 --- */
     .effect-text {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0);
-      font-size: 80px; /* さらに大きく！ */
-      font-weight: bold;
-      color: #222; /* 見やすい濃い色に変更 */
-      transition: transform 0.6s ease, opacity 0.6s ease;
+      font-size: 100px;
+      color: #ff6b81;
       opacity: 0;
-      z-index: 11;
+      text-shadow: 0 0 20px #ffadc1, 0 0 40px #fff;
+      transition: transform 0.5s ease-out, opacity 0.8s ease-out;
+      z-index: 10;
       pointer-events: none;
-      font-family: 'Satisfy', cursive;
-      text-shadow: 2px 2px 4px rgba(255,255,255,0.6);
     }
 
     .effect-text.show {
-      transform: translate(-50%, -50%) scale(1.2);
+      transform: translate(-50%, -50%) scale(1.3);
       opacity: 1;
+      animation: glowFade 1.5s ease-out forwards;
+    }
+
+    @keyframes glowFade {
+      0% { opacity: 1; text-shadow: 0 0 30px #fff, 0 0 60px #ff6b81; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); text-shadow: 0 0 0 transparent; }
+    }
+
+    /* TRUE LOVE は金色発光 */
+    .effect-text.true {
+      color: #ffd700;
+      text-shadow: 0 0 30px #fff3b0, 0 0 60px #ffd700;
     }
   </style>
 </head>
 <body>
-  <h1>🍒LOVEBUTTON🍒</h1>
+  <h1>💍 LOVE BUTTON 💍</h1>
+
   <div class="button-container">
     <button class="love" onclick="activateLove()">LOVE</button>
     <button class="true-love" onclick="activateTrueLove()">TRUE LOVE</button>
   </div>
 
-  <div id="effect" class="effect-icon">💖</div>
   <div id="effectText" class="effect-text">LOVE</div>
 
   <audio id="love-sound" src="LOVE_male.mp3"></audio>
@@ -114,25 +109,20 @@
   <audio id="bell-sound" src="wedding_bell.mp3"></audio>
 
   <script>
-    function showEffect(icon, text, textColor) {
-      const effect = document.getElementById('effect');
+    function showEffect(text, isTrueLove = false) {
       const effectText = document.getElementById('effectText');
-      effect.textContent = icon;
-      effect.classList.add('show');
       effectText.textContent = text;
-      effectText.style.color = textColor;
+      effectText.classList.remove('true', 'show'); // 一度リセット
+      if (isTrueLove) effectText.classList.add('true');
+      void effectText.offsetWidth; // アニメーション再トリガー
       effectText.classList.add('show');
-      setTimeout(() => {
-        effect.classList.remove('show');
-        effectText.classList.remove('show');
-      }, 1500);
     }
 
     function activateLove() {
       const sound = document.getElementById('love-sound');
       sound.currentTime = 0;
       sound.play();
-      showEffect('💖', 'LOVE', '#222');
+      showEffect('LOVE');
     }
 
     function activateTrueLove() {
@@ -141,7 +131,7 @@
       sound.currentTime = 0;
       sound.play();
       setTimeout(() => bell.play(), 1000);
-      showEffect('💛', 'TRUE LOVE', '#222');
+      showEffect('TRUE LOVE', true);
     }
   </script>
 </body>
