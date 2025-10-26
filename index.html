@@ -14,29 +14,30 @@
       overflow: hidden;
       height: 100vh;
       margin: 0;
-      touch-action: manipulation; /* iPhoneでのズーム防止 */
+      touch-action: manipulation;
     }
 
     h1 {
-      font-size: 48px;
+      font-size: 38px; /* 一行に収まるサイズへ調整 */
       color: #ff2f92;
       margin-top: 40px;
+      white-space: nowrap;
     }
 
     .button-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px;
+      gap: 40px;
       margin-top: 60px;
     }
 
     button {
-      width: 120px;
-      height: 120px;
+      width: 150px; /* 少し大きく */
+      height: 150px;
       border-radius: 50%;
       border: none;
-      font-size: 22px;
+      font-size: 26px;
       font-family: 'Allura', cursive;
       cursor: pointer;
       transition: transform 0.15s ease;
@@ -49,7 +50,7 @@
     }
 
     .true-love {
-      background: linear-gradient(145deg, #ffd700, #ffea70);
+      background: linear-gradient(145deg, #ffd700, #ffef8a);
       color: #333;
       box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
     }
@@ -58,7 +59,7 @@
       transform: scale(1.05);
     }
 
-    /* ハート演出 */
+    /* 💖ハート演出 */
     .floating-container {
       position: absolute;
       pointer-events: none;
@@ -70,11 +71,10 @@
       position: absolute;
       width: 120px;
       height: 120px;
-      background-color: #ff7eb3;
       transform: rotate(-45deg);
       top: -60px;
       left: -60px;
-      opacity: 0.8;
+      opacity: 0.85;
       z-index: 10;
     }
 
@@ -84,7 +84,6 @@
       position: absolute;
       width: 120px;
       height: 120px;
-      background-color: #ff7eb3;
       border-radius: 50%;
     }
 
@@ -100,7 +99,7 @@
 
     .floating-text {
       position: absolute;
-      font-size: 40px;
+      font-size: 42px;
       color: #fff;
       text-shadow: 0 0 8px rgba(255, 50, 100, 0.8);
       top: 50%;
@@ -152,7 +151,7 @@
   <audio id="bell-sound" src="wedding_bell.mp3"></audio>
 
   <script>
-    function showEffect(text, color = '#ff7eb3') {
+    function showEffect(text, color) {
       const container = document.createElement('div');
       container.className = 'floating-container';
 
@@ -160,6 +159,15 @@
       heart.className = 'floating-heart';
       heart.style.backgroundColor = color;
       heart.style.setProperty('--heart-color', color);
+      heart.style.boxShadow = `0 0 30px ${color}`;
+
+      heart.style.setProperty('--heart-color', color);
+      heart.style.backgroundColor = color;
+      heart.style.setProperty('--heart-glow', color);
+
+      // before/afterにも同じ色
+      heart.style.setProperty('--heart-color', color);
+      heart.style.setProperty('--heart-glow', color);
 
       const textDiv = document.createElement('div');
       textDiv.className = 'floating-text';
@@ -181,7 +189,7 @@
       const sound = document.getElementById('love-sound');
       sound.currentTime = 0;
       sound.play();
-      showEffect('LOVE');
+      showEffect('LOVE', '#ff6b81');
     }
 
     function activateTrueLove() {
