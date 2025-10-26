@@ -5,35 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOVE BUTTON</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap');
+
     body {
       background-color: #000;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: 'Cherry Bomb One', cursive;
       text-align: center;
       height: 100vh;
       overflow: hidden;
     }
 
     h1 {
-      margin-top: 50px;
+      margin-top: 40px;
       font-size: 2em;
       letter-spacing: 2px;
     }
 
+    .username {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #ffccff;
+    }
+
     .button-container {
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 100px;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      margin-top: 80px;
     }
 
     button {
-      position: relative;
-      padding: 30px 60px;
-      font-size: 32px;
+      width: 120px;
+      height: 120px;
+      font-size: 20px;
       font-weight: bold;
       border: none;
-      border-radius: 50px;
+      border-radius: 50%;
       color: white;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.3s;
@@ -54,84 +63,59 @@
       color: black;
     }
 
-    .heart {
+    .effect-text {
       position: fixed;
       top: 50%;
       left: 50%;
-      font-size: 150px;
+      font-size: 60px;
       transform: translate(-50%, -50%) scale(0);
       opacity: 0;
       transition: transform 0.6s ease, opacity 0.6s ease;
       z-index: 10;
       pointer-events: none;
+      font-family: 'Cherry Bomb One', cursive;
     }
 
-    .heart.show {
+    .effect-text.show {
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
-    }
-
-    .sparkle {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: white;
-      border-radius: 50%;
-      animation: sparkle 1s linear forwards;
-      opacity: 0.8;
-    }
-
-    @keyframes sparkle {
-      0% { transform: scale(1) translate(0,0); opacity: 1; }
-      100% { transform: scale(0.5) translate(100px, -100px); opacity: 0; }
     }
   </style>
 </head>
 <body>
   <h1>LOVE BUTTON 💖</h1>
+  <div class="username">ユーザー名：Aiwotutaero</div>
   <div class="button-container">
-    <button class="love" onclick="activateLove()">LOVE!</button>
-    <button class="true-love" onclick="activateTrueLove()">TRUE LOVE!</button>
+    <button class="love" onclick="activateLove()">LOVE</button>
+    <button class="true-love" onclick="activateTrueLove()">TRUE LOVE</button>
   </div>
 
-  <div id="heart" class="heart">💖</div>
+  <div id="effect" class="effect-text">LOVE</div>
 
   <audio id="love-sound" src="LOVE_male.mp3"></audio>
   <audio id="true-love-sound" src="TRUE_LOVE_male.mp3"></audio>
 
   <script>
-    function createSparkle() {
-      const sparkle = document.createElement('div');
-      sparkle.classList.add('sparkle');
-      sparkle.style.top = (window.innerHeight / 2) + 'px';
-      sparkle.style.left = (window.innerWidth / 2) + 'px';
-      sparkle.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      document.body.appendChild(sparkle);
-      setTimeout(() => sparkle.remove(), 1000);
+    function showEffect(text, color) {
+      const effect = document.getElementById('effect');
+      effect.textContent = text;
+      effect.style.color = color;
+      effect.classList.add('show');
+      setTimeout(() => effect.classList.remove('show'), 1000);
     }
 
     function activateLove() {
-      const heart = document.getElementById('heart');
       const sound = document.getElementById('love-sound');
-      heart.textContent = '💖';
-      heart.style.color = '#ff4d6d';
-      heart.classList.add('show');
       sound.currentTime = 0;
       sound.play();
-      for (let i = 0; i < 20; i++) setTimeout(createSparkle, i * 50);
-      setTimeout(() => heart.classList.remove('show'), 1000);
+      showEffect('LOVE', '#ff4d6d');
     }
 
     function activateTrueLove() {
-      const heart = document.getElementById('heart');
       const sound = document.getElementById('true-love-sound');
-      heart.textContent = '💛';
-      heart.style.color = 'gold';
-      heart.classList.add('show');
       sound.currentTime = 0;
       sound.play();
-      for (let i = 0; i < 30; i++) setTimeout(createSparkle, i * 40);
-      setTimeout(() => heart.classList.remove('show'), 1200);
+      showEffect('TRUE LOVE', 'gold');
     }
   </script>
 </body>
