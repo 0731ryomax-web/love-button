@@ -14,32 +14,35 @@
 
   h1 {
     color: #ff69b4;
-    font-size: 42px;
-    margin-top: 40px;
+    font-size: 30px; /* ← サイズ調整！ */
+    margin-top: 35px;
     margin-bottom: 50px;
+    white-space: nowrap;
   }
 
   .button {
     display: inline-block;
     font-family: 'Allura', cursive;
-    font-size: 32px;
-    padding: 25px 60px;
-    border-radius: 50px;
+    font-size: 28px;
+    padding: 25px 25px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
     color: white;
     border: none;
     cursor: pointer;
     margin: 20px;
-    transition: transform 0.1s;
+    transition: transform 0.05s ease;
     user-select: none;
   }
 
   .button:active {
-    transform: scale(0.97);
+    transform: scale(0.95);
   }
 
   .love {
     background-color: #ff4081;
-    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.5);
   }
 
   .truelove {
@@ -48,16 +51,38 @@
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
   }
 
-  .heart {
+  /* ハートをCSSで描画 */
+  .heart-shape {
     position: fixed;
-    font-size: 60px;
-    color: #ff69b4;
-    opacity: 0;
-    animation: pop 1s ease-out forwards;
+    width: 100px;
+    height: 90px;
+    background-color: currentColor;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    animation: heartPop 1s ease-out forwards;
     z-index: 5;
+  }
+
+  .heart-shape::before,
+  .heart-shape::after {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 90px;
+    background-color: currentColor;
+    border-radius: 50%;
+  }
+
+  .heart-shape::before {
+    top: -50px;
+    left: 0;
+  }
+
+  .heart-shape::after {
+    top: 0;
+    left: 50px;
   }
 
   .text {
@@ -72,9 +97,9 @@
     z-index: 10;
   }
 
-  @keyframes pop {
+  @keyframes heartPop {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    40% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+    40% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
     100% { transform: translate(-50%, -50%) scale(1.0); opacity: 0; }
   }
 
@@ -92,14 +117,14 @@
 <button class="button love" onclick="playLove()">LOVE</button>
 <button class="button truelove" onclick="playTrueLove()">TRUE LOVE</button>
 
-<audio id="loveSound" src="https://actions.google.com/sounds/v1/human_voices/human_grunt.ogg"></audio>
-<audio id="trueLoveSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+<!-- あなたの前回使用mp3を下のsrcに入れる -->
+<audio id="loveSound" src="love.mp3"></audio>
+<audio id="trueLoveSound" src="truelove.mp3"></audio>
 
 <script>
 function createHeartAndText(text, color) {
   const heart = document.createElement('div');
-  heart.innerHTML = '❤';
-  heart.className = 'heart';
+  heart.className = 'heart-shape';
   heart.style.color = color;
   document.body.appendChild(heart);
 
@@ -109,6 +134,7 @@ function createHeartAndText(text, color) {
   textElem.style.color = color;
   document.body.appendChild(textElem);
 
+  // アニメ後削除
   setTimeout(() => {
     heart.remove();
     textElem.remove();
